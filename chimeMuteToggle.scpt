@@ -21,9 +21,9 @@ on run params
 		end tell
 		
 		repeat until application appl is running
-			delay 1
+			delay 0.1
 		end repeat
-		delay 0.5
+		delay 0.1
 	end if
 	
     tell application "System Events" to keystroke keyy using modifier
