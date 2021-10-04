@@ -2,7 +2,7 @@
     "title": "Support USB Mute key for Amazon Chime on macOS",
     "maintainers": ["briberns"],
     "homepage": "https://w.amazon.com/bin/view/Users/Briberns/MacMute/",
-    "import_url": "karabiner://karabiner/assets/complex_modifications/import?url=https://w.amazon.com/bin/download/Users/Briberns/MacMute/WebHome/briberns_chimemute.json", 
+    "import_url": "karabiner://karabiner/assets/complex_modifications/import?url=https://github.com/bernstbj/macmutekey/briberns_chimemute.json", 
     "rules": [
         {
             "description": "Remap USB mute key when Chime is frontmost",
