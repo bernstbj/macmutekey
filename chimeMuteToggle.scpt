@@ -23,6 +23,9 @@ on run params
 		repeat until application appl is running
 			delay 0.1
 		end repeat
+
+        -- IF YOU ARE GETTING INCONSISTENT (UN)MUTE BEHAVIOR, TRY INCREASING THE VALUE
+        -- BELOW FROM 0.1 TO 0.5 OR EVEN 1.0
 		delay 0.1
 	end if
 	
