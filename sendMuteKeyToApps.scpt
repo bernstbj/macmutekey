@@ -41,6 +41,7 @@ set the prioritizeDefault to false
 --                  sequence. Ideally this is a small value (e.g. 0.1 seconds) as it minimizes the
 --                  disruption caused by the script when it switches apps, but making it too small on
 --                  a slow/struggling Mac will cause the key sequence to be misfired and thus ineffective.
+--
 --                  If you are experiencing inconsistent (un)mute behavior, this value might be too low
 --                  and you need to increase it; setting it to 1.0 /should/ be sufficient.
 set the switchAppDelay to 0.1
@@ -49,11 +50,15 @@ set the switchAppDelay to 0.1
 
 
 
-(* DETERMINE CURRENT FRONTMOST APP *)
+(*
+** Determine current frontmost app.
+*)
 set frontApp to (path to frontmost application as text)
 
 
-(* FIGURE OUT WHAT APPS ARE RUNNING *)
+(*
+** Figure out what teleconferencing apps are running.
+*)
 set the hasChime to false
 set the hasZoom to false
 set the hasTeams to false
@@ -82,10 +87,19 @@ end tell
 
 
 
-(* SEND UN/MUTE SEQUENCE TO DETERMINED APP *)
+(*
+** Determine which key sequence we want to trigger based on preferences
+** and what is actually running right now.
+*)
 global appl
 global keyy
 global modifier
+
+global defaultApp
+global hasChime
+global hasZoom
+global hasTeams
+global hasWebex
 
 if the prioritizeDefault is true
     detectAndSetDefault()
@@ -104,6 +118,10 @@ else
 end if
 
 
+(*
+** Bring our target teleconferencing app to the foreground, send the key
+** sequence, then bring the prior foreground app back to the front.
+*)
 if frontApp is not equal to appl then
     tell application appl
         reopen
@@ -128,7 +146,9 @@ end if
 
 
 
-(* SETUP OF APP KEY SEQUENCES *)
+(*
+** Set up the application names and key sequences as functions.
+*)
 on setChimeKeys()
     set appl to "Amazon Chime"
     set keyy to "y"
@@ -153,6 +173,11 @@ on setTeamsKeys()
     set modifier to {command down, shift down}
 end setTeamsKeys
 
+
+(*
+** Find if the default app is running and if so, set the key sequence
+** as appropriate for the default app.
+*)
 on detectAndSetDefault()
     if the defaultApp is "chime" and the hasChime is true then
         setChimeKeys()
@@ -166,4 +191,5 @@ on detectAndSetDefault()
 
     return false
 end detectAndSetDefault
+
 
