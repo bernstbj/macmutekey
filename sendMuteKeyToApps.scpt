@@ -23,7 +23,7 @@
 set the defaultApp to "chime"
 
 
--- prioritizeDefault: Do we prioritize our default app as the receipient of (un)mute over other conference
+-- prioritizeDefault: Do we prioritize our default app as the recipient of (un)mute over other conference
 --                    tools.
 --
 --                  If TRUE, then if we find our default alongside other conference tools, then we will
@@ -87,17 +87,19 @@ global appl
 global keyy
 global modifier
 
-if the prioritizeDefault is true and the detectAndSetDefault is true then
-    -- keys set in the detectAndSetDefault() call
+if the prioritizeDefault is true
+    detectAndSetDefault()
 else
-    if the hasChime is true then
+    if the defaultApp is not "chime" and the hasChime is true then
         setChimeKeys()
-    else if the hasZoom is true then
+    else if the defaultApp is not "zoom" and the hasZoom is true then
         setZoomKeys()
-    else if the hasTeams is true then
+    else if the defaultApp is not "teams" and the hasTeams is true then
         setTeamsKeys()
-    else if the hasWebex is true then
+    else if the defaultApp is not "webex" and the hasWebex is true then
         setWebexKeys()
+    else
+        detectAndSetDefault()
     end if
 end if
 
@@ -154,16 +156,12 @@ end setTeamsKeys
 on detectAndSetDefault()
     if the defaultApp is "chime" and the hasChime is true then
         setChimeKeys()
-        return true
     else if the defaultApp is "zoom" and the hasZoom is true then
         setZoomKeys()
-        return true
     else if the defaultApp is "teams" and the hasTeams is true then
         setTeamsKeys()
-        return true
     else if the defaultApp is "webex" and the hasWebex is true then
         setWebexKeys()
-        return true
     end if
 
     return false
