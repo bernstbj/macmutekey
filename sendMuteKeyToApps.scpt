@@ -1,28 +1,51 @@
 (*
     @(#) sendMuteKeyToApps.scpt v2.0.0
 
-    Sends the (un)mute key sequence to the conferencing tool determined to be in use.
+    Sends the (un)mute key sequence to the teleconferencing tool determined to be in use.
 
-    2021-10-11, Brian J. Bernstein
+    2021-10-11, Brian J. Bernstein (brian@dronefone.com, briberns@)
 *)
 
 
 -- CONFIG: START
 
--- prioritizeChime - Do we prioritize Chime as the receipient of (un)mute over other conference tools.
+-- defaultApp:      Default teleconferencing app. This is the one that you or your organization uses
+--                  by default, i.e. the one that you always have open.
 --
---                   if TRUE, then if we find Chime alongside other conference tools, then we will
---                   send mute sequences to Chime. This is if you always want Chime to receive mute
---                   sequences regardless of what else is running.
+--                  The idea is that some companies will always use a particular conferencing app for
+--                  internal calls, but sometimes you might need to join a call with another app
+--                  (e.g. someone at AWS will always have Chime running, but might have to periodically
+--                  join a Zoom call). Since the logic of this script knows how to handle several
+--                  different conferencing apps, the defaultApp setting can be used as a bit of a
+--                  tie-breaker. See 'prioritizeDefault' setting.
+--  
+--                  valid defaults: chime, zoom, teams, webex.
+set the defaultApp to "chime"
+
+
+-- prioritizeDefault: Do we prioritize our default app as the receipient of (un)mute over other conference
+--                    tools.
 --
---                   if FALSE, we assume that other tools will get mute sequences if they are running.
---                   This is for those who always run Chime, but only run (say) Zoom when they need to
---                   and will close Zoom down when they're done, i.e. if we find a non-Chime tool running,
---                   then we assume that is the tool that needs to be (un)muted.
-set the prioritizeChime to false
+--                  If TRUE, then if we find our default alongside other conference tools, then we will
+--                  send mute sequences to the default. This is if you always want the default app to
+--                  receive mute sequences regardless of what else is running.
+--
+--                  If FALSE, we assume that other tools will get mute sequences if they are running.
+--                  This is for those who always run their default app, but only run (say) Zoom when they
+--                  need to and will close Zoom down when they're done, i.e. if we find a non-Chime tool
+--                  running, then we assume that is the tool that needs to be (un)muted.
+set the prioritizeDefault to false
+
+
+-- switchAppDelay:  Time that we wait after activating the conferencing tool before sending the key
+--                  sequence. Ideally this is a small value (e.g. 0.1 seconds) as it minimizes the
+--                  disruption caused by the script when it switches apps, but making it too small on
+--                  a slow/struggling Mac will cause the key sequence to be misfired and thus ineffective.
+--                  If you are experiencing inconsistent (un)mute behavior, this value might be too low
+--                  and you need to increase it; setting it to 1.0 /should/ be sufficient.
+set the switchAppDelay to 0.1
 
 -- CONFIG: END
-
 
 
 
@@ -36,76 +59,50 @@ set the hasZoom to false
 set the hasTeams to false
 set the hasWebex to false
 
---tell application "System Events" to get name of every process
--- Cisco WebEx Start, Meeting Center, Teams, zoom.us
---copy "starting" to stdout
---display dialog "Starting"
-tell application "System Events" -- to get name of every process
+tell application "System Events"
     set theList to get name of every process
     repeat with theItem in theList
-        --        copy "item: " to stdout
-        --        copy theItem to stdout
-        -- display dialog "item: " & theItem
         if the (theItem as string) is "Amazon Chime" then
             set the hasChime to true
-            --            display dialog "Found chime"
         end if
         
         if the (theItem as string) is "zoom.us" then
             set the hasZoom to true
-            --            display dialog "found zoom"
         end if
         
         if the (theItem as string) is "Teams" then
             set the hasTeams to true
-            --            display dialog "found teams"
         end if
         
         if the (theItem as string) is "webexmta" then
             set the hasWebex to true
-            --            display dialog "found webex"
         end if
-        
     end repeat
 end tell
 
---display dialog "Has chime: " & hasChime
 
 
 (* SEND UN/MUTE SEQUENCE TO DETERMINED APP *)
-set appl to "Amazon Chime"
-set keyy to "y"
-set modifier to command down
+global appl
+global keyy
+global modifier
 
-if the prioritizeChime is true and the hasChime is true then
-    -- appl, keyy, and modifier already set to chime by default
---    display dialog "Sending mute to chime"
+if the prioritizeDefault is true and the detectAndSetDefault is true then
+    -- keys set in the detectAndSetDefault() call
 else
-    if the hasZoom is true then
-        set appl to "zoom.us"
-        set keyy to "a"
-        set modifier to {command down, shift down}
-        --display dialog "Sending mute to zoom"
-    else if the hasWebex is true then
-        set appl to "webexmta"
-        set keyy to "m"
-        set modifier to {command down, shift down}
-        --display dialog "Sending mute to webex"
+    if the hasChime is true then
+        setChimeKeys()
+    else if the hasZoom is true then
+        setZoomKeys()
     else if the hasTeams is true then
-        -- not sure if this is correct key sequence for teams?
-        set appl to "Teams"
-        set keyy to "m"
-        set modifier to {command down, shift down}
-        --display dialog "Sending mute to teams"
-    else
-    -- appl, keyy, and modifier already set to chime by default
-        --display dialog "Sending mute to chime (because found nothing else running)"
+        setTeamsKeys()
+    else if the hasWebex is true then
+        setWebexKeys()
     end if
 end if
 
 
 if frontApp is not equal to appl then
-        
     tell application appl
         reopen
         activate
@@ -115,9 +112,7 @@ if frontApp is not equal to appl then
         delay 0.1
     end repeat
 
-    -- IF YOU ARE GETTING INCONSISTENT (UN)MUTE BEHAVIOR, TRY INCREASING THE VALUE
-    -- BELOW FROM 0.1 TO 0.5 OR EVEN 1.0
-    delay 0.1
+    delay switchAppDelay
 end if
 
 tell application "System Events" to keystroke keyy using modifier
@@ -128,4 +123,49 @@ if frontApp is not equal to appl then
         activate
     end tell
 end if
+
+
+
+(* SETUP OF APP KEY SEQUENCES *)
+on setChimeKeys()
+    set appl to "Amazon Chime"
+    set keyy to "y"
+    set modifier to command down
+end setChimeKeys
+
+on setZoomKeys()
+    set appl to "zoom.us"
+    set keyy to "a"
+    set modifier to {command down, shift down}
+end setZoomKeys
+
+on setWebexKeys()
+    set appl to "webexmta"
+    set keyy to "m"
+    set modifier to {command down, shift down}
+end setWebexKeys
+
+on setTeamsKeys()
+    set appl to "Teams"
+    set keyy to "m"
+    set modifier to {command down, shift down}
+end setTeamsKeys
+
+on detectAndSetDefault()
+    if the defaultApp is "chime" and the hasChime is true then
+        setChimeKeys()
+        return true
+    else if the defaultApp is "zoom" and the hasZoom is true then
+        setZoomKeys()
+        return true
+    else if the defaultApp is "teams" and the hasTeams is true then
+        setTeamsKeys()
+        return true
+    else if the defaultApp is "webex" and the hasWebex is true then
+        setWebexKeys()
+        return true
+    end if
+
+    return false
+end detectAndSetDefault
 
