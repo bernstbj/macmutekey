@@ -1,0 +1,216 @@
+{
+    "title": "Support USB Mute key for conferencing apps on macOS",
+    "maintainers": ["brian@dronefone.com"],
+    "homepage": "https://github.com/bernstbj/macmutekey/",
+    "import_url": "karabiner://karabiner/assets/complex_modifications/import?url=https://github.com/bernstbj/macmutekey/bjb_mutekey.json", 
+    "rules": [
+        {
+            "description": "Remap USB mute key when Amazon Chime is frontmost",
+            "manipulators": [
+                {
+                    "conditions": [
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 8447,
+                                    "vendor_id": 1003
+                                }
+                            ],
+                            "type": "device_if"
+                        },
+                        {
+                            "bundle_identifiers": [
+                                "^com\\.amazon\\.Amazon-Chime"
+                            ],
+                            "type": "frontmost_application_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "y",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_control"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "y",
+                            "modifiers": [
+                                "left_command"
+                            ]
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Remap USB mute key when Zoom is frontmost",
+            "manipulators": [
+                {
+                    "conditions": [
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 8447,
+                                    "vendor_id": 1003
+                                }
+                            ],
+                            "type": "device_if"
+                        },
+                        {
+                            "bundle_identifiers": [
+                                "^us\\.zoom\\.xos"
+                            ],
+                            "type": "frontmost_application_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "y",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_control"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "a",
+                            "modifiers": [
+                                "left_command",
+                                "left_shift"
+                            ]
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Remap USB mute key when Teams is frontmost",
+            "manipulators": [
+                {
+                    "conditions": [
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 8447,
+                                    "vendor_id": 1003
+                                }
+                            ],
+                            "type": "device_if"
+                        },
+                        {
+                            "bundle_identifiers": [
+                                "^com\\.microsoft\\.teams"
+                            ],
+                            "type": "frontmost_application_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "y",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_control"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "m",
+                            "modifiers": [
+                                "left_command",
+                                "left_shift"
+                            ]
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Remap USB mute key when Webex is frontmost",
+            "manipulators": [
+                {
+                    "conditions": [
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 8447,
+                                    "vendor_id": 1003
+                                }
+                            ],
+                            "type": "device_if"
+                        },
+                        {
+                            "bundle_identifiers": [
+                                "^com\\.cisco\\.webexmeetingsapp"
+                            ],
+                            "type": "frontmost_application_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "y",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_control"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "m",
+                            "modifiers": [
+                                "left_command",
+                                "left_shift"
+                            ]
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Remap USB mute key when conferencing app is not frontmost",
+            "manipulators": [
+                {
+                    "conditions": [
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 8447,
+                                    "vendor_id": 1003
+                                }
+                            ],
+                            "type": "device_if"
+                        },
+                        {
+                            "bundle_identifiers": [
+                                "^com\\.amazon\\.Amazon-Chime",
+                                "^us\\.zoom\\.xos",
+                                "^com\\.microsoft\\.teams",
+                                "^com\\.cisco\\.webexmeetingsapp"
+                            ],
+                            "type": "frontmost_application_unless"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "y",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_control"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "shell_command": "/usr/bin/osascript ~/.config/karabiner/sendMuteKeyToApps.scpt"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}
