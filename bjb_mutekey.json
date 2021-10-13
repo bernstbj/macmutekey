@@ -130,6 +130,48 @@
             ]
         },
         {
+            "description": "Remap USB mute key when Skype is frontmost",
+            "manipulators": [
+                {
+                    "conditions": [
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 8447,
+                                    "vendor_id": 1003
+                                }
+                            ],
+                            "type": "device_if"
+                        },
+                        {
+                            "bundle_identifiers": [
+                                "^com\\.microsoft\\.skype"
+                            ],
+                            "type": "frontmost_application_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "y",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_control"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "m",
+                            "modifiers": [
+                                "left_command",
+                                "left_shift"
+                            ]
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
             "description": "Remap USB mute key when Webex is frontmost",
             "manipulators": [
                 {
@@ -189,6 +231,7 @@
                             "bundle_identifiers": [
                                 "^com\\.amazon\\.Amazon-Chime",
                                 "^us\\.zoom\\.xos",
+                                "^com\\.microsoft\\.skype",
                                 "^com\\.microsoft\\.teams",
                                 "^com\\.cisco\\.webexmeetingsapp"
                             ],

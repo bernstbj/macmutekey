@@ -19,7 +19,7 @@
 --                  different conferencing apps, the defaultApp setting can be used as a bit of a
 --                  tie-breaker. See 'prioritizeDefault' setting.
 --  
---                  valid defaults: chime, zoom, teams, webex.
+--                  valid defaults: chime, zoom, skype, teams, webex.
 set the defaultApp to "chime"
 
 
@@ -61,6 +61,7 @@ set frontApp to (path to frontmost application as text)
 *)
 set the hasChime to false
 set the hasZoom to false
+set the hasSkype to false
 set the hasTeams to false
 set the hasWebex to false
 
@@ -73,6 +74,10 @@ tell application "System Events"
         
         if the (theItem as string) is "zoom.us" then
             set the hasZoom to true
+        end if
+        
+        if the (theItem as string) is "Skype" then
+            set the hasSkype to true
         end if
         
         if the (theItem as string) is "Teams" then
@@ -98,6 +103,7 @@ global modifier
 global defaultApp
 global hasChime
 global hasZoom
+global hasSkype
 global hasTeams
 global hasWebex
 
@@ -108,6 +114,8 @@ else
         setChimeKeys()
     else if the defaultApp is not "zoom" and the hasZoom is true then
         setZoomKeys()
+    else if the defaultApp is not "skype" and the hasSkype is true then
+        setSkypeKeys()
     else if the defaultApp is not "teams" and the hasTeams is true then
         setTeamsKeys()
     else if the defaultApp is not "webex" and the hasWebex is true then
@@ -167,6 +175,12 @@ on setWebexKeys()
     set modifier to {command down, shift down}
 end setWebexKeys
 
+on setSkypeKeys()
+    set appl to "Skype"
+    set keyy to "m"
+    set modifier to {command down, shift down}
+end setSkypeKeys
+
 on setTeamsKeys()
     set appl to "Teams"
     set keyy to "m"
@@ -183,6 +197,8 @@ on detectAndSetDefault()
         setChimeKeys()
     else if the defaultApp is "zoom" and the hasZoom is true then
         setZoomKeys()
+    else if the defaultApp is "skype" and the hasSkype is true then
+        setSkypeKeys()
     else if the defaultApp is "teams" and the hasTeams is true then
         setTeamsKeys()
     else if the defaultApp is "webex" and the hasWebex is true then
