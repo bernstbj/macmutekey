@@ -4,6 +4,11 @@
     Sends the (un)mute key sequence to the teleconferencing tool determined to be in use.
 
     2021-10-11, Brian J. Bernstein (brian@dronefone.com, briberns@)
+
+    Revision History:
+        1.0.0   - initial release, only supporting Chime.
+        2.0.0   - Reworked to support multiple applications, defaults, prioritization.
+                  Now supports chime, zoom, skype, teams, and webex.
 *)
 
 
@@ -44,7 +49,7 @@ set the prioritizeDefault to false
 --
 --                  If you are experiencing inconsistent (un)mute behavior, this value might be too low
 --                  and you need to increase it; setting it to 1.0 /should/ be sufficient.
-set the switchAppDelay to 0.1
+set the switchAppDelay to 0.2
 
 -- CONFIG: END
 
