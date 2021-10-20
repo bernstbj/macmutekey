@@ -1,5 +1,5 @@
 {
-    "title": "Support USB Mute key for conferencing apps on macOS",
+    "title": "Support USB Mute key for conferencing apps on macOS v2.0.0",
     "maintainers": ["brian@dronefone.com"],
     "homepage": "https://github.com/bernstbj/macmutekey/",
     "import_url": "karabiner://karabiner/assets/complex_modifications/import?url=https://github.com/bernstbj/macmutekey/bjb_mutekey.json", 
