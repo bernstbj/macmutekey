@@ -1,5 +1,5 @@
 (*
-    @(#) sendMuteKeyToApps.scpt v2.0.0
+    @(#) sendMuteKeyToApps.scpt v2.0.1
 
     Sends the (un)mute key sequence to the teleconferencing tool determined to be in use.
 
@@ -9,6 +9,8 @@
         1.0.0   - initial release, only supporting Chime.
         2.0.0   - Reworked to support multiple applications, defaults, prioritization.
                   Now supports chime, zoom, skype, teams, and webex.
+        2.0.1   - 2021-10-28 - optimized the frontmost switch and check algorithm which eliminates
+                  the need for the switchAppDelay setting.
 *)
 
 
@@ -41,15 +43,6 @@ set the defaultApp to "chime"
 --                  running, then we assume that is the tool that needs to be (un)muted.
 set the prioritizeDefault to false
 
-
--- switchAppDelay:  Time that we wait after activating the conferencing tool before sending the key
---                  sequence. Ideally this is a small value (e.g. 0.1 seconds) as it minimizes the
---                  disruption caused by the script when it switches apps, but making it too small on
---                  a slow/struggling Mac will cause the key sequence to be misfired and thus ineffective.
---
---                  If you are experiencing inconsistent (un)mute behavior, this value might be too low
---                  and you need to increase it; setting it to 1.0 /should/ be sufficient.
-set the switchAppDelay to 0.2
 
 -- CONFIG: END
 
@@ -141,11 +134,9 @@ if frontApp is not equal to appl then
         activate
     end tell
         
-    repeat until application appl is running
+    repeat until application appl is frontmost
         delay 0.1
     end repeat
-
-    delay switchAppDelay
 end if
 
 tell application "System Events" to keystroke keyy using modifier

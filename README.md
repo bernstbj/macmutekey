@@ -45,3 +45,21 @@ coming soon, but for the most part you need to remove the MacMuteKey rules from 
 
 
 As I said, work in progress....
+
+
+## Version History
+
+### v1.0.0 - Sep 2021
+
+Initial release. Only supports Amazon Chime in foreground and background modes.
+
+### v2.0.0 - Oct 2021
+
+Major rework to support other teleconferencing applications: Amazon Chime, Zoom, Microsoft Teams, Microsoft Skype, and WebEx.
+Reworked some of the naming of things to make it more generic since it isn't limited to Amazon Chime anymore.
+
+### v2.0.1 - 2021-10-28
+
+Slight tweak to the AppleScript that is used when the teleconferencing app is not foremost to make it (un)mute faster. As a result, got to remove the configuration item for delay.
+
+
