@@ -187,7 +187,8 @@
                         },
                         {
                             "bundle_identifiers": [
-                                "^com\\.cisco\\.webexmeetingsapp"
+                                "^com\\.cisco\\.webexmeetingsapp",
+                                "^com\\.webex\\.meetingmanager"
                             ],
                             "type": "frontmost_application_if"
                         }
