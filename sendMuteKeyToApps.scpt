@@ -62,6 +62,7 @@ set the hasZoom to false
 set the hasSkype to false
 set the hasTeams to false
 set the hasWebex to false
+set the hasFaceTime to false
 
 tell application "System Events"
     set theList to get name of every process
@@ -85,6 +86,10 @@ tell application "System Events"
         if the (theItem as string) is "webexmta" then
             set the hasWebex to true
         end if
+
+        if the (theItem as string) is "FaceTime" then
+            set the hasFaceTime to true
+        end if
     end repeat
 end tell
 
@@ -104,6 +109,7 @@ global hasZoom
 global hasSkype
 global hasTeams
 global hasWebex
+global hasFaceTime
 
 if the prioritizeDefault is true
     detectAndSetDefault()
@@ -118,6 +124,8 @@ else
         setTeamsKeys()
     else if the defaultApp is not "webex" and the hasWebex is true then
         setWebexKeys()
+    else if the defaultApp is not "FaceTime" and the hasFaceTime is true then
+        setFaceTimeKeys()
     else
         detectAndSetDefault()
     end if
@@ -166,7 +174,7 @@ on setZoomKeys()
 end setZoomKeys
 
 on setWebexKeys()
-    set appl to "webexmta"
+    set appl to "Meeting Center"
     set keyy to "m"
     set modifier to {command down, shift down}
 end setWebexKeys
@@ -182,6 +190,12 @@ on setTeamsKeys()
     set keyy to "m"
     set modifier to {command down, shift down}
 end setTeamsKeys
+
+on setFaceTimeKeys()
+    set appl to "FaceTime"
+    set keyy to "y"
+    set modifier to command down
+end setFaceTimeKeys
 
 
 (*
@@ -199,6 +213,8 @@ on detectAndSetDefault()
         setTeamsKeys()
     else if the defaultApp is "webex" and the hasWebex is true then
         setWebexKeys()
+    else if the defaultApp is "FaceTime" and the hasFaceTime is true then
+        setFaceTimeKeys()
     end if
 
     return false
