@@ -4,13 +4,11 @@
 
 Karabiner support for the mute keyboard device on macOS.
 
-This solution was defined as a result of receiving a single-key mute keyboard from this manufacturer: [https://techkeys.us/collections/accessories/products/onekeyboard-mute-button-edition?variant=39598265598031](https://techkeys.us/collections/accessories/products/onekeyboard-mute-button-edition?variant=39598265598031) . The situation is that it was pre-programmed to send a Windows sequence and I needed it to send a Mac sequence. While there are simple solutions in macOS System Preferences to just swap control and command keys for a particular device, I leveraged Karabiner since I've been using that for years and also extended it to use an AppleScript to support mute when your video conferencing tool is not the foreground application.
+This solution was defined as a result of receiving a single-key mute keyboard from this manufacturer: [https://techkeys.us/collections/accessories/products/onekeyboard-mute-button-edition?variant=39598265598031](https://techkeys.us/collections/accessories/products/onekeyboard-mute-button-edition?variant=39598265598031) . The situation is that it was pre-programmed to send a Windows sequence and I needed it to send a Mac sequence. While there are simple solutions in macOS System Preferences to just swap control and command keys for a particular device, that only works for when the teleconferencing app is foreground and I wanted the key to work regardless of what application is active. As such, I leveraged Karabiner since I've been using that for years and it also allows me to use an AppleScript to support mute when your video conferencing tool is not the foreground application.
 
 Why is this on Github? Because Karabiner is unable to process files that come from internal websites (wiki, git, etc).
 
 For help, contact me at briberns@ or brian@dronefone.com
-
-**THIS README IS A WORK IN PROGRESS...**
 
 
 ## Support for Teleconferencing Apps
@@ -44,31 +42,28 @@ There is a wonderful free & open source tool available for the Mac called [Karab
 
 ## Installation
 
-coming soon.... check the intranet site
-
-
-## Configuring The Remapping
-
 ### General Overview of Solution
 
 The general overview of Karabiner and the procedure below is:
 
-Installation of the Karabiner tool.
-Visit a github page to automate the installation of two configuration rules.
-Optionally install a small AppleScript file to support one of the rules.
-There are two rules that will be installed: one which works only when Chime is the active foremost application, and another optional one which can toggle microphone mute when Chime is //not// the foremost application. The optional step 3 above is in support of that latter rule and is only necessary if you want that convenience.
+1. Installation of the Karabiner tool.
+1. Visit a github page to automate the installation of two configuration rules.
+1. Optionally install a small AppleScript file to support one of the rules.
 
-As a bonus, I will show at the end how to use keyboard remapping to support Windows keyboards better for those with muscle memory of Mac keyboard layouts!
+There are two rules that will be installed: one which works only when Chime is the active foremost application, and another optional one which can toggle microphone mute when Chime is *not* the foremost application. The optional step 3 above is in support of that latter rule and is only necessary if you want that convenience.
+
 
 ##### A Little Bit About Karabiner and Configuration
 
-The Karabiner GUI isn't quite powerful enough to define anything more advanced than a simple remapping. However, there is a JSON configuration file that exists named `${HOME}/.config/karabiner/karabiner.json` that you can freely edit to get what you want. You can edit the file with VIM, TextEdit, Emacs, etc. and the moment it is saved, Karabiner will pick it up and apply the changes. As well, in the GUI one of the tabs is 'Logs' under which you'll get real-time feedback of any errors in your JSON file. But just as a heads up,** the procedure below does not require you to edit this file**. However, if you do go tinkering with it be sure to *make a backup of that JSON file in case you want to revert!*
+The Karabiner GUI isn't quite powerful enough to define anything more advanced than a simple remapping. However, there is a JSON configuration file that exists named `${HOME}/.config/karabiner/karabiner.json` that you can freely edit to get what you want. You can edit the file with VIM, TextEdit, Emacs, etc. and the moment it is saved, Karabiner will pick it up and apply the changes. As well, in the GUI one of the tabs is 'Logs' under which you'll get real-time feedback of any errors in your JSON file. But just as a heads up, *the procedure below does not require you to edit this file*. However, if you do go tinkering with it be sure to *make a backup of that JSON file in case you want to revert!*
 
 So let's get started!
 
 ### Install Karabiner-Elements
 
 This is the easy part. Visit the [Karabiner-Elements website and download the .DMG file](https://karabiner-elements.pqrs.org/). This disk image contains a .PKG which you can double click to install. Note that this will probably require administrative privileges on your Mac because it installed a kernel extension (kext) which is necessary to shim itself between the keyboard and the macOS. As well, with the most recent versions of the macOS it might also cause some security dialogs to appear because it needs permission in the macOS System Preferences to control 'Accessibility' of the macOS.
+
+**NOTE:** This is also available through Mac HomeBrew: `brew install karabiner-elements`.
 
 As shown in the image below, you will need to permission three support apps: karabinergrabber, karabinerobserver, and Karabiner-EventViewer.app. The first two are the OS shims necessary to do the remapping, but the 3rd is only necessary if you choose to use the Event Viewer application which is a tool to discover keystrokes, mouse buttons, and USB device IDs if you want to create additional rules.
 
@@ -83,7 +78,8 @@ Now that you've installed Karabiner-Elements, you need to specify rules for it t
 When I originally put together this solution, I thought it was done-and-dusted ... until I started tinkering around with it and realized I could support additional teleconferencing apps with some tweaks. As such, you might have already installed an earlier version of the rule set and thus we come to a fork in the road:
 
 If you are UPGRADING from an earlier version of the rules, follow along to the next section.
-If you are** INSTALLING FOR THE FIRST TIME**, then skip to the section [[Installing Karabiner Rules>>Users.Briberns.MacMute.WebHome||anchor="HInstallingKarabinerRules"]]'.
+If you are **INSTALLING FOR THE FIRST TIME**, then skip to the section [Installing Karabiner Rules].
+
 ### Upgrading Karabiner Rules
 
 If you have previously installed an earlier version of the rule set (e.g. v1.0), you need to remove the obsolete rules. You can do this through the Karabiner GUI (it's in your Applications folder) under 'Complex Modifications' and do two steps:
@@ -138,7 +134,7 @@ The rule we installed attempts to launch `/usr/bin/osascript` which is the comma
 
 [Download the AppleScript v2.0.1](https://raw.githubusercontent.com/bernstbj/macmutekey/master/sendMuteKeyToApps.scpt)
 
-Note that your browser might just open the script and display it rather than saving it. If so, just save it to your Downloads folder, and move it to the location specified. If you're trying to find the `.config` directory with the "save file" dialog, note that the leading '.' makes it a //hidden// directory in UNIX-speak, so you can press `Command-Shift-.` to toggle visibility of hidden files and directories.
+Note that your browser might just open the script and display it rather than saving it. If so, just save it to your Downloads folder, and move it to the location specified. If you're trying to find the `.config` directory with the "save file" dialog, note that the leading '.' makes it a *hidden* directory in UNIX-speak, so you can press `Command-Shift-.` to toggle visibility of hidden files and directories.
 
 But alternatively you can do this from the command line (Terminal) by entering the command:
 
