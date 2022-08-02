@@ -4,6 +4,12 @@
 
 Karabiner support for the mute keyboard device on macOS.
 
+## TL;DR
+
+Quick one-key for (un)muting teleconferencing apps. Unfortunately, this key can only be programmed to send one particular key sequence, so this solution makes it support multiple apps (and their different key sequences), but also detects which one you're using on-the-fly and even works when the teleconferencing app is not the frontmost app.
+
+## A Little More Description
+
 This solution was defined as a result of receiving a single-key mute keyboard from this manufacturer: [https://techkeys.us/collections/accessories/products/onekeyboard-mute-button-edition?variant=39598265598031](https://techkeys.us/collections/accessories/products/onekeyboard-mute-button-edition?variant=39598265598031) . The situation is that it was pre-programmed to send a Windows sequence and I needed it to send a Mac sequence. While there are simple solutions in macOS System Preferences to just swap control and command keys for a particular device, that only works for when the teleconferencing app is foreground and I wanted the key to work regardless of what application is active. As such, I leveraged Karabiner since I've been using that for years and it also allows me to use an AppleScript to support mute when your video conferencing tool is not the foreground application.
 
 Why is this on Github? Because Karabiner is unable to process files that come from internal websites (wiki, git, etc).
@@ -17,9 +23,9 @@ Current support:
 
 Application | K-E Status | AppleScript Status | Comments
 ----------- | ---------- | ------------------ | --------
-Amazon Chime | Working | Working |
-FaceTime | Working | Working | Requires a keyboard shortcut to be defined as FaceTime by default does not have one. See [FaceTime Support].
-Microsoft Teams | Testing | Testing | Documentation says Command-Shift-M is (un)mute, but doesn't appear to have any keyboard shortcuts? Started working with Teams v1.4.00.29477?
+Amazon Chime | Working | Working | May not work when someone is presenting and you 'break out' the presentation to a separate window as only one particular Chime window will accept the key sequence, and we can't tell which one from the code. Apparently this is being addressed in a future Chime release.
+FaceTime | Working | Working | Requires a keyboard shortcut to be defined as FaceTime by default does not have one. See [FaceTime Support](#FaceTime-Support).
+Microsoft Teams | Mostly Working | Mostly Working | Documentation says Command-Shift-M is (un)mute, but doesn't appear to have any keyboard shortcuts? Started working with Teams v1.4.00.29477?
 Skype | Testing | Testing | Need to validate with an actual call.
 WebEx | Working | Working |
 Zoom | Working | Working | 
