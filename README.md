@@ -114,7 +114,8 @@ Once you have removed the older rules, you can import the new rules from the reg
 
 Typically creating rules involves clicking through the Karabiner GUI or editing the JSON config file, but I have made the process easy by leveraging it's browser protocol support, so you can just click on the below:
 
-[Download and Install Mute Key Rules to Karabiner (v2.0.0)](karabiner://karabiner/assets/complexmodifications/import?url=https://raw.githubusercontent.com/bernstbj/macmutekey/master/bjbmutekey.json)
+[Download and Install Mute Key Rules to Karabiner (v2.0.0)](http://karabiner://karabiner/assets/complexmodifications/import?url=https://raw.githubusercontent.com/bernstbj/macmutekey/master/bjbmutekey.json)
+(karabiner://karabiner/assets/complexmodifications/import?url=https://raw.githubusercontent.com/bernstbj/macmutekey/master/bjbmutekey.json)
 
 What should happen now is that your browser will attempt to launch the Karabiner-Elements app and pass the custom rules JSON to it. If you have done everything right so far, a dialog will appear noting the two rules it is going to install along with an 'Import' button. Otherwise, you might get something similar to the below which is noting that you did not permission the Karabiner tools in macOS and will have to go back to the System Preferences -> Security & Privacy settings.
 
