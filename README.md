@@ -73,7 +73,7 @@ This is the easy part. Visit the [Karabiner-Elements website and download the .D
 
 As shown in the image below, you will need to permission three support apps: karabinergrabber, karabinerobserver, and Karabiner-EventViewer.app. The first two are the OS shims necessary to do the remapping, but the 3rd is only necessary if you choose to use the Event Viewer application which is a tool to discover keystrokes, mouse buttons, and USB device IDs if you want to create additional rules.
 
-![Security and Privacy panel](images/security and privacy panel.png)
+![Security and Privacy panel](images/security_and_privacy_panel.png)
 
 Go into System Preferences -> Security & Privacy -> (top tab) Privacy -> (left scroll) Input Monitoring and enable the 3 tools to have permission.
 
@@ -94,7 +94,7 @@ Disable and remove the previous complex rules.
 Remove the artifacts of the previous complex rules.
 To disable and remove the previous complex rules, open the Karabiner GUI, click on 'Complex modifications' and you should have a window like this:
 
-![Disable and remove previous rules](images/remove old rules.png)
+![Disable and remove previous rules](images/remove_old_rules.png)
 
 While you may have more than one listed, what you're looking for is any rules that are 'Remap USB mute key when...', i.e. any of the rules this solution has defined previously. Click on the 'Remove' button to the right for each one you find.
 
@@ -102,7 +102,7 @@ Next, you need to remove the artifacts of the previous rules. When you first ins
 
 To remove the artifacts, click on the 'Add rule' button in the lower right and you'll get a window like this:
 
-![Karabiner rule upgrade](images/remove old rulesource.png)
+![Karabiner rule upgrade](images/remove_old_rulesource.png)
 
 Circled in RED is the delete button for the older v1.0 rules. Click on the delete button and it will remove this rule set from the Karabiner rule artifacts storage.
 
@@ -126,7 +126,7 @@ Otherwise, you should end up with a window like the below. You can ignore the 'E
 
 At this point, you should end up with several rules in the Karabiner GUI under 'Complex Modifications' which look like the below image~:
 
-![Complex rules window](images/complex rules window multi.png)
+![Complex rules window](images/complex_rules_window_multi.png)
 
 What this is showing is that you have two rules types: "foremost" and "not foremost".
 
