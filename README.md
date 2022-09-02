@@ -23,7 +23,7 @@ Current support:
 
 Application | K-E Status | AppleScript Status | Comments
 ----------- | ---------- | ------------------ | --------
-Amazon Chime | Working | Working | May not work when someone is presenting and you 'break out' the presentation to a separate window as only one particular Chime window will accept the key sequence, and we can't tell which one from the code. Apparently this is being addressed in a future Chime release.
+Amazon Chime | Working | Working | May not work when someone is presenting and you 'break out' the presentation to a separate window as only one particular Chime window will accept the key sequence, and we can't tell which one from the code. Appears to have been addressed since v5.11 (late Aug 2022).
 FaceTime | Working | Working | Requires a keyboard shortcut to be defined as FaceTime by default does not have one. See [FaceTime Support](#FaceTime-Support).
 Microsoft Teams | Mostly Working | Mostly Working | Documentation says Command-Shift-M is (un)mute, but doesn't appear to have any keyboard shortcuts? Started working with Teams v1.4.00.29477?
 Skype | Testing | Testing | Need to validate with an actual call.
