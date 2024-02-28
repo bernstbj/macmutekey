@@ -1,5 +1,5 @@
 (*
-    @(#) sendMuteKeyToApps.scpt v2.0.1
+    @(#) sendMuteKeyToApps.scpt v2.3.0
 
     Sends the (un)mute key sequence to the teleconferencing tool determined to be in use.
 
@@ -11,6 +11,11 @@
                   Now supports chime, zoom, skype, teams, and webex.
         2.0.1   - 2021-10-28 - optimized the frontmost switch and check algorithm which eliminates
                   the need for the switchAppDelay setting.
+        2.1.0   - 2011-11-18 - added support for FaceTime, though it requires a keyboard shortcut to
+                  be defined for it to work.
+        2.2.0   - 2023-06-15 - added support for Slack huddles.
+        2.3.0   - 2024-02-12 - Added support for "new" Microsoft Teams.
+                             - Updated support for WebEx since the process name changed to V2.
 *)
 
 
@@ -26,7 +31,7 @@
 --                  different conferencing apps, the defaultApp setting can be used as a bit of a
 --                  tie-breaker. See 'prioritizeDefault' setting.
 --  
---                  valid defaults: chime, zoom, skype, teams, webex.
+--                  valid defaults: chime, zoom, skype, msteams, teams, webex.
 set the defaultApp to "chime"
 
 
@@ -61,8 +66,10 @@ set the hasChime to false
 set the hasZoom to false
 set the hasSkype to false
 set the hasTeams to false
+set the hasMSTeams to false
 set the hasWebex to false
 set the hasFaceTime to false
+set the hasSlack to false
 
 tell application "System Events"
     set theList to get name of every process
@@ -83,12 +90,39 @@ tell application "System Events"
             set the hasTeams to true
         end if
         
+        if the (theItem as string) is "Microsoft Teams WebView" then
+            set the hasMSTeams to true
+        end if
+        
         if the (theItem as string) is "webexmta" then
+            set the hasWebex to true
+        end if
+        
+        if the (theItem as string) is "webexmtaV2" then
             set the hasWebex to true
         end if
 
         if the (theItem as string) is "FaceTime" then
             set the hasFaceTime to true
+        end if
+
+        if the (theItem as string) is "Slack" then
+            (*
+            ** we do things SLIGHTLY differently here since we're looking to see if Slack
+            ** is in a HUDDLE. If it is, then we're treating it as a teleconferencing app.
+            *)
+
+            tell application "System Events"
+                set myList to name of windows of (processes whose name is "Slack")
+                set theWindowList to my subListsToOneList(myList)
+
+                repeat with theWindow in theWindowList
+                    set w to (theWindow as string)
+                    if the w contains "Huddle" then
+                        set the hasSlack to true
+                    end if
+                end repeat
+            end tell
         end if
     end repeat
 end tell
@@ -108,8 +142,10 @@ global hasChime
 global hasZoom
 global hasSkype
 global hasTeams
+global hasMSTeams
 global hasWebex
 global hasFaceTime
+global hasSlack
 
 if the prioritizeDefault is true
     detectAndSetDefault()
@@ -122,10 +158,14 @@ else
         setSkypeKeys()
     else if the defaultApp is not "teams" and the hasTeams is true then
         setTeamsKeys()
+    else if the defaultApp is not "msteams" and the hasMSTeams is true then
+        setMSTeamsKeys()
     else if the defaultApp is not "webex" and the hasWebex is true then
         setWebexKeys()
     else if the defaultApp is not "FaceTime" and the hasFaceTime is true then
         setFaceTimeKeys()
+    else if the defaultApp is not "slack" and the hasSlack is true then
+        setSlackKeys()
     else
         detectAndSetDefault()
     end if
@@ -191,10 +231,22 @@ on setTeamsKeys()
     set modifier to {command down, shift down}
 end setTeamsKeys
 
+on setMSTeamsKeys()
+    set appl to "Microsoft Teams WebView"
+    set keyy to "m"
+    set modifier to {command down, shift down}
+end setMSTeamsKeys
+
 on setFaceTimeKeys()
     set appl to "FaceTime"
     set keyy to "y"
     set modifier to command down
+end setFaceTimeKeys
+
+on setSlackKeys()
+    set appl to "slack"
+    set keyy to " "
+    set modifier to {command down, shift down}
 end setFaceTimeKeys
 
 
@@ -211,13 +263,25 @@ on detectAndSetDefault()
         setSkypeKeys()
     else if the defaultApp is "teams" and the hasTeams is true then
         setTeamsKeys()
+    else if the defaultApp is "msteams" and the hasMSTeams is true then
+        setMSTeamsKeys()
     else if the defaultApp is "webex" and the hasWebex is true then
         setWebexKeys()
     else if the defaultApp is "FaceTime" and the hasFaceTime is true then
         setFaceTimeKeys()
+    else if the defaultApp is "slack" and the hasSlack is true then
+        setSlackKeys()
     end if
 
     return false
 end detectAndSetDefault
 
+
+on subListsToOneList(l)
+	set newL to {}
+	repeat with i in l
+		set newL to newL & i
+	end repeat
+	return newL
+end subListsToOneList
 

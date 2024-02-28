@@ -238,3 +238,11 @@ Slight tweak to the AppleScript that is used when the teleconferencing app is no
 
 Added support for FaceTime, though it requires a keyboard shortcut to be defined for it to work. As well, fixed support for WebEx - now it appears to be working correctly.
 
+### v2.2.0 - 2023-06-15
+
+Added support for Slack huddles.
+
+### v2.3.0 - 2024-02-12
+
+Added support for the new MS Teams version (late 2023).
+Updated support for WebEx as it now reports as a 'V2' which wasn't recognized.
